@@ -44,6 +44,8 @@ form.addEventListener('submit', async (e) => {
     buttonText.style.display = 'none';
     loadingSpinner.style.display = 'inline-block';
     const callbackUrl = document.getElementById('callback').value.trim();
+    const startLat = document.getElementById('startLat').value.trim();
+    const startLng = document.getElementById('startLng').value.trim();
     const data = {
         encoded_polyline: document.getElementById('polyline').value.trim(),
         simulation_speed_kmh: parseFloat(document.getElementById('speed').value),
@@ -52,6 +54,10 @@ form.addEventListener('submit', async (e) => {
     };
     if (callbackUrl) {
         data.callback_url = callbackUrl;
+    }
+    if (startLat && startLng) {
+        data.start_lat = parseFloat(startLat);
+        data.start_lng = parseFloat(startLng);
     }
     try {
         if (callbackUrl) {
@@ -73,9 +79,13 @@ form.addEventListener('submit', async (e) => {
             // Mode local : juste visualisation
             statusDiv.className = 'status success';
             statusDiv.innerHTML = `<i class="fas fa-map-marked-alt"></i> <span>Simulation locale : visualisation du trajet sans envoi d'API.</span>`;
-            // Redirige vers la page de suivi avec le polyline en paramètre (optionnel)
+            // Redirige vers la page de suivi avec le polyline et le point de départ en paramètre
+            let url = `itineraireProgress.html?polyline=${encodeURIComponent(data.encoded_polyline)}`;
+            if (startLat && startLng) {
+                url += `&startLat=${encodeURIComponent(startLat)}&startLng=${encodeURIComponent(startLng)}`;
+            }
             setTimeout(() => {
-                window.location.href = `itineraireProgress.html?polyline=${encodeURIComponent(data.encoded_polyline)}`;
+                window.location.href = url;
             }, 1200);
         }
     } catch (err) {
