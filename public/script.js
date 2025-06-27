@@ -39,30 +39,44 @@ themeToggleButton.addEventListener('click', () => {
 form.addEventListener('submit', async (e) => {
     e.preventDefault();
     statusDiv.className = 'status loading';
-    statusDiv.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span>Envoi de la requête de simulation...</span>';
+    statusDiv.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span>Simulation en cours...</span>';
     submitButton.disabled = true;
     buttonText.style.display = 'none';
     loadingSpinner.style.display = 'inline-block';
+    const callbackUrl = document.getElementById('callback').value.trim();
     const data = {
         encoded_polyline: document.getElementById('polyline').value.trim(),
-        callback_url: document.getElementById('callback').value.trim(),
         simulation_speed_kmh: parseFloat(document.getElementById('speed').value),
         stop_probability: parseFloat(document.getElementById('stopProb').value),
         stop_duration_seconds: parseInt(document.getElementById('stopDur').value, 10)
     };
+    if (callbackUrl) {
+        data.callback_url = callbackUrl;
+    }
     try {
-        const resp = await fetch('/simulate_route', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data)
-        });
-        const result = await resp.json();
-        if (resp.ok) {
-            statusDiv.className = 'status success';
-            statusDiv.innerHTML = `<i class="fas fa-check-circle"></i> <span>Simulation lancée avec succès : ${result.message}</span>`;
+        if (callbackUrl) {
+            // Mode API : envoi au backend
+            const resp = await fetch('/simulate_route', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            const result = await resp.json();
+            if (resp.ok) {
+                statusDiv.className = 'status success';
+                statusDiv.innerHTML = `<i class="fas fa-check-circle"></i> <span>Simulation lancée avec succès : ${result.message}</span>`;
+            } else {
+                statusDiv.className = 'status error';
+                statusDiv.innerHTML = `<i class="fas fa-exclamation-triangle"></i> <span>Erreur : ${result.error || 'Une erreur inconnue est survenue.'}</span>`;
+            }
         } else {
-            statusDiv.className = 'status error';
-            statusDiv.innerHTML = `<i class="fas fa-exclamation-triangle"></i> <span>Erreur : ${result.error || 'Une erreur inconnue est survenue.'}</span>`;
+            // Mode local : juste visualisation
+            statusDiv.className = 'status success';
+            statusDiv.innerHTML = `<i class="fas fa-map-marked-alt"></i> <span>Simulation locale : visualisation du trajet sans envoi d'API.</span>`;
+            // Redirige vers la page de suivi avec le polyline en paramètre (optionnel)
+            setTimeout(() => {
+                window.location.href = `itineraireProgress.html?polyline=${encodeURIComponent(data.encoded_polyline)}`;
+            }, 1200);
         }
     } catch (err) {
         statusDiv.className = 'status error';
