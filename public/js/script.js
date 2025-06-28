@@ -79,6 +79,7 @@ form.addEventListener('submit', async (e) => {
 	const startLat = document.getElementById('startLat').value.trim();
 	const startLng = document.getElementById('startLng').value.trim();
 	const reference = document.getElementById('reference').value.trim();
+	const interval = document.getElementById('interval').value.trim();
 
 	// Préparer les données pour l'envoi
 	const data = {
@@ -98,6 +99,9 @@ form.addEventListener('submit', async (e) => {
 	}
 	if (reference) {
 		data.reference = reference;
+	}
+	if (interval) {
+		data.interval_seconds = parseInt(interval, 10);
 	}
 
 	try {
