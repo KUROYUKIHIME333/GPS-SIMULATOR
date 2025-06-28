@@ -87,6 +87,11 @@ body {
 	left: 10vw;
 	z-index: 1000;
 	pointer-events: auto;
+	display: flex !important;
+	align-items: center;
+	justify-content: center;
+	visibility: visible !important;
+	opacity: 1 !important;
 }
 
 /* Bouton de bascule de thème */
@@ -100,12 +105,14 @@ body {
 	margin: 0;
 	border-radius: 0;
 	box-shadow: none;
-	display: flex;
+	display: flex !important;
 	align-items: center;
 	justify-content: center;
 	transition: none;
 	outline: none;
 	pointer-events: auto;
+	visibility: visible !important;
+	opacity: 1 !important;
 }
 
 .theme-toggle-button:hover {
