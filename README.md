@@ -92,6 +92,23 @@ Content-Type: application/json
 - axios
 - haversine-distance
 
+## À propos du développeur
+
+Ce projet a été développé par **RAMAZANI SUMAILI Daniel**.
+
+- Ingénieur-technicien en maintenance industrielle et développeur web
+- Passionné par les sciences, la technologie et l'innovation
+- Toujours prêt à explorer, apprendre et partager
+
+**Contact :**
+- Email : [danielramazanisumaili@gmail.com](mailto:danielramazanisumaili@gmail.com)
+- Téléphone : [+243815086116](tel:+243815086116)
+- [Site web](https://daniel-ramazani.onrender.com/)
+- [LinkedIn](https://www.linkedin.com/in/daniel-hermann-ramazani-521786232/)
+- [GitHub](https://github.com/KUROYUKIHIME333)
+- [CV](https://daniel-ramazani.onrender.com/curiculum.html)
+- [Projets](https://daniel-ramazani.onrender.com/project.html)
+
 ---
 
 Pour toute question ou amélioration, ouvrez une issue ou contactez le développeur.
