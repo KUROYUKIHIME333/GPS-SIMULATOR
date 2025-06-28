@@ -4,12 +4,18 @@ const bodyParser = require("body-parser");
 const polyline = require("@mapbox/polyline"); // For decoding Google Maps polylines
 const axios = require("axios"); // For making HTTP POST requests
 const haversine = require("haversine-distance"); // For calculating distance between two points
+const path = require("path"); // For handling file paths
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Middleware to parse JSON request bodies
 app.use(bodyParser.json());
+
+// Servir la landing page de documentation sur '/'
+app.get('/', (req, res) => {
+  res.sendFile(__dirname + '/public/home.html');
+});
 
 // Servir les fichiers statiques pour l'UI
 app.use(express.static("public"));
