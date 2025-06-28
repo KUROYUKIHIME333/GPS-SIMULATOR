@@ -103,7 +103,7 @@ body {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	transition: color 0.3s;
+	transition: none;
 	outline: none;
 	pointer-events: auto;
 }
@@ -114,7 +114,10 @@ body {
 }
 
 .theme-toggle-button:hover {
-	color: var(--primary-hover);
+	color: var(--primary-color);
+	background: none;
+	box-shadow: none;
+	transform: none;
 }
 
 body.dark-mode .theme-toggle-button {
