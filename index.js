@@ -1,4 +1,3 @@
-// Import necessary modules
 const express = require("express");
 const bodyParser = require("body-parser");
 const polyline = require("@mapbox/polyline"); // For decoding Google Maps polylines
@@ -56,7 +55,8 @@ async function simulateVehicleMovement(
   stopDurationSeconds = 30,
   startLat = null,
   startLng = null,
-  reference = null
+  reference = null,
+  intervalSeconds = 5
 ) {
   try {
     // Décodage du polyline en liste de points {latitude, longitude}
@@ -82,7 +82,6 @@ async function simulateVehicleMovement(
       return;
     }
 
-    const intervalSeconds = 5; // Envoi toutes les 5 secondes
     let sequenceId = 0;
     const speedMps = (simulationSpeedKmh * 1000) / 3600;
     let currentPointIndex = 0;
@@ -175,18 +174,14 @@ async function simulateVehicleMovement(
         timestamp: currentTime,
         sequence_id: sequenceId,
       };
-      if (reference) {
-        gpsData.reference = reference;
-      }
-      try {
-        await axios.post(callbackUrl, gpsData);
-        console.log(
-          `Envoyé: ${gpsData.latitude.toFixed(4)}, ${gpsData.longitude.toFixed(4)} (Seq: ${sequenceId})`
-        );
-      } catch (e) {
-        console.error(
-          `Erreur d'envoi des données GPS à ${callbackUrl}: ${e.message}`
-        );
+      if (callbackUrl) {
+        // Envoi des données GPS simulées à l'URL de rappel
+        try {
+          await axios.post(callbackUrl, gpsData);
+          console.log(`Données envoyées à ${callbackUrl}: ${JSON.stringify(gpsData)}`);
+        } catch (error) {
+          console.error(`Erreur lors de l'envoi des données à ${callbackUrl}: ${error.message}`);
+        }
       }
     }, intervalSeconds * 1000);
   } catch (e) {
@@ -205,6 +200,7 @@ app.post("/simulate_route", (req, res) => {
     start_lat = null,
     start_lng = null,
     reference = null,
+    interval_seconds = 5
   } = req.body;
 
   if (!encoded_polyline) {
@@ -223,17 +219,11 @@ app.post("/simulate_route", (req, res) => {
     stop_duration_seconds,
     start_lat,
     start_lng,
-    reference
+    reference,
+    interval_seconds
   );
 
   res.status(200).json({ message: "Simulation démarrée en arrière-plan." });
-});
-
-// Basic route for checking if the API is running
-app.get("/", (req, res) => {
-  res.send(
-    "API de simulation GPS Express. Envoyez une requête POST à /simulate_route pour commencer."
-  );
 });
 
 // Start the server
