@@ -49,7 +49,8 @@ async function simulateVehicleMovement(
   stopProbability = 0.1,
   stopDurationSeconds = 30,
   startLat = null,
-  startLng = null
+  startLng = null,
+  reference = null
 ) {
   try {
     // Décodage du polyline en liste de points {latitude, longitude}
@@ -168,6 +169,9 @@ async function simulateVehicleMovement(
         timestamp: currentTime,
         sequence_id: sequenceId,
       };
+      if (reference) {
+        gpsData.reference = reference;
+      }
       try {
         await axios.post(callbackUrl, gpsData);
         console.log(
@@ -194,6 +198,7 @@ app.post("/simulate_route", (req, res) => {
     stop_duration_seconds = 30,
     start_lat = null,
     start_lng = null,
+    reference = null,
   } = req.body;
 
   if (!encoded_polyline) {
@@ -211,7 +216,8 @@ app.post("/simulate_route", (req, res) => {
     stop_probability,
     stop_duration_seconds,
     start_lat,
-    start_lng
+    start_lng,
+    reference
   );
 
   res.status(200).json({ message: "Simulation démarrée en arrière-plan." });

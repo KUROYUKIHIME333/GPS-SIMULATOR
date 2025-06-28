@@ -1,67 +1,59 @@
 <!DOCTYPE html>
 <html lang="fr">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Suivi d'Itinéraire - GPS Simulator</title>
-        <link
-            href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap"
-            rel="stylesheet">
-        <link rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
-            crossorigin="anonymous" referrerpolicy="no-referrer" />
-        <link rel="stylesheet" href="style.css">
-        <link rel="apple-touch-icon" sizes="180x180"
-            href="apple-touch-icon.png">
-        <link rel="icon" type="image/png" sizes="32x32"
-            href="favicon-32x32.png">
-        <link rel="icon" type="image/png" sizes="16x16"
-            href="favicon-16x16.png">
-        <link rel="icon" type="image/png" sizes="192x192"
-            href="android-chrome-192x192.png">
-        <link rel="icon" type="image/png" sizes="512x512"
-            href="android-chrome-512x512.png">
-        <link rel="shortcut icon" href="favicon.ico">
-        <link rel="manifest" href="site.webmanifest">
-        <meta name="theme-color" content="#7B00D4">
-        <meta name="description"
-            content="Suivi en temps réel d'un itinéraire simulé et du mobile sur carte. Visualisez l'itinéraire prévu et le trajet suivi.">
-        <link rel="stylesheet" href="style2.css">
-        <link rel="stylesheet"
-            href="https://unpkg.com/leaflet/dist/leaflet.css" />
-    </head>
-    <body>
-        <div class="top-bar">
-            <div class="logo"><i class="fas fa-map-marked-alt"></i> GPS
-                Simulator</div>
-            <div class="right">
-                <button class="nav-btn"
-                    onclick="window.location.href='index.html'">
-                    <i class="fas fa-sliders-h"></i> Configurer Simulation
-                </button>
-                <button class="mode-btn" id="toggleModeBtn">
-                    <i class="fas fa-moon"></i> Mode sombre
-                </button>
-            </div>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GPS Simulator - Suivi d'Itinéraire</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="style.css">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="android-chrome-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="android-chrome-512x512.png">
+    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="manifest" href="site.webmanifest">
+    <meta name="theme-color" content="#7B00D4">
+    <meta name="description"
+        content="Suivi en temps réel d'un itinéraire simulé et du mobile sur carte. Visualisez l'itinéraire prévu et le trajet suivi.">
+    <link rel="stylesheet" href="style2.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+</head>
+
+<body>
+    <div class="top-bar">
+        <div class="logo"><i class="fas fa-map-marked-alt"></i> GPS
+            Simulator</div>
+        <div class="right">
+            <button class="nav-btn" onclick="window.location.href='index.html'">
+                <i class="fas fa-sliders-h"></i> Configurer Simulation
+            </button>
+            <button class="mode-btn" id="toggleModeBtn">
+                <i class="fas fa-moon"></i> Mode sombre
+            </button>
         </div>
-        <div id="map"></div>
-        <label for="startLat">
-            <i class="fas fa-map-marker-alt"></i> Latitude de départ (optionnel)
-            <i class="fas fa-info-circle tooltip-icon" title="Latitude du point de départ à forcer (optionnel)"></i>
-        </label>
-        <div class="input-group">
-            <input id="startLat" type="number" step="any" placeholder="Ex: 48.8566" />
-        </div>
-        <label for="startLng">
-            <i class="fas fa-map-marker-alt"></i> Longitude de départ (optionnel)
-            <i class="fas fa-info-circle tooltip-icon" title="Longitude du point de départ à forcer (optionnel)"></i>
-        </label>
-        <div class="input-group">
-            <input id="startLng" type="number" step="any" placeholder="Ex: 2.3522" />
-        </div>
-        <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-        <script
-            src="https://unpkg.com/@mapbox/polyline@1.1.1/src/polyline.js"></script>
-        <script src="progress.js"></script>
-    </body>
+    </div>
+    <div id="map"></div>
+    <label for="startLat">
+        <i class="fas fa-map-marker-alt"></i> Latitude de départ (optionnel)
+        <i class="fas fa-info-circle tooltip-icon" title="Latitude du point de départ à forcer (optionnel)"></i>
+    </label>
+    <div class="input-group">
+        <input id="startLat" type="number" step="any" placeholder="Ex: 48.8566" />
+    </div>
+    <label for="startLng">
+        <i class="fas fa-map-marker-alt"></i> Longitude de départ (optionnel)
+        <i class="fas fa-info-circle tooltip-icon" title="Longitude du point de départ à forcer (optionnel)"></i>
+    </label>
+    <div class="input-group">
+        <input id="startLng" type="number" step="any" placeholder="Ex: 2.3522" />
+    </div>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/@mapbox/polyline@1.1.1/src/polyline.js"></script>
+    <script src="progress.js"></script>
+</body>
+
 </html>
