@@ -33,21 +33,28 @@
             </button>
         </div>
     </div>
+
     <div id="map"></div>
-    <label for="startLat">
-        <i class="fas fa-map-marker-alt"></i> Latitude de départ (optionnel)
-        <i class="fas fa-info-circle tooltip-icon" title="Latitude du point de départ à forcer (optionnel)"></i>
-    </label>
-    <div class="input-group">
-        <input id="startLat" type="number" step="any" placeholder="Ex: 48.8566" />
+
+    <div class="controls-section">
+        <h2>Paramètres de Départ (Optionnel)</h2>
+        <label for="startLat">
+            <i class="fas fa-map-marker-alt"></i> Latitude de départ
+            <i class="fas fa-info-circle tooltip-icon" title="Latitude du point de départ à forcer (optionnel)"></i>
+        </label>
+        <div class="input-group">
+            <input id="startLat" type="number" step="any" placeholder="Ex: 48.8566" />
+        </div>
+
+        <label for="startLng">
+            <i class="fas fa-map-marker-alt"></i> Longitude de départ
+            <i class="fas fa-info-circle tooltip-icon" title="Longitude du point de départ à forcer (optionnel)"></i>
+        </label>
+        <div class="input-group">
+            <input id="startLng" type="number" step="any" placeholder="Ex: 2.3522" />
+        </div>
     </div>
-    <label for="startLng">
-        <i class="fas fa-map-marker-alt"></i> Longitude de départ (optionnel)
-        <i class="fas fa-info-circle tooltip-icon" title="Longitude du point de départ à forcer (optionnel)"></i>
-    </label>
-    <div class="input-group">
-        <input id="startLng" type="number" step="any" placeholder="Ex: 2.3522" />
-    </div>
+
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script src="https://unpkg.com/@mapbox/polyline@1.1.1/src/polyline.js"></script>
     <script src="js/progress.js"></script>
