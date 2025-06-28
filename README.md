@@ -8,7 +8,6 @@ Accès en ligne : [https://gps-simulator.onrender.com/](https://gps-simulator.on
 - Génération et simulation de parcours GPS à partir d'un polyline encodé (format Google Maps)
 - Simulation de vitesse, arrêts aléatoires, durée d'arrêt personnalisable
 - Envoi des positions GPS simulées à une API externe (callback)
-- Interface web avec changement de thème (clair/sombre)
 
 ## Installation
 
@@ -30,7 +29,6 @@ Accès en ligne : [https://gps-simulator.onrender.com/](https://gps-simulator.on
 - Remplissez le formulaire avec un polyline, la vitesse, la probabilité et la durée d'arrêt.
 - (Optionnel) Renseignez une URL de callback pour recevoir les positions GPS simulées.
 - Cliquez sur "Lancer la simulation".
-- Le bouton en haut à gauche permet de changer le thème (clair/sombre).
 
 ## Utilisation de l'API `/simulate_route`
 
