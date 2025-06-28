@@ -2,6 +2,8 @@
 
 Ce projet est un simulateur de trajectoire GPS avec une interface web moderne et une API backend permettant de simuler l'envoi de positions GPS à une URL de callback.
 
+Accès en ligne : [https://gps-simulator.onrender.com/](https://gps-simulator.onrender.com/)
+
 ## Fonctionnalités principales
 - Génération et simulation de parcours GPS à partir d'un polyline encodé (format Google Maps)
 - Simulation de vitesse, arrêts aléatoires, durée d'arrêt personnalisable
@@ -21,6 +23,7 @@ Ce projet est un simulateur de trajectoire GPS avec une interface web moderne et
    ```
 4. Accéder à l'interface web :
    - Ouvrir [http://localhost:3000](http://localhost:3000) ou le chemin renseigné en fonction du port disponible dans votre navigateur
+   - Ou utilisez la version hébergée : [https://gps-simulator.onrender.com/](https://gps-simulator.onrender.com/)
 
 ## Utilisation de l'interface web
 

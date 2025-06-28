@@ -1,6 +1,11 @@
 /* home.css - Styles spécifiques à la landing page de documentation */
+body {
+    overflow-x: hidden;
+}
 .landing-hero {
-	width: 100%;
+	width: 100vw;
+	max-width: 100vw;
+	box-sizing: border-box;
 	background: linear-gradient(90deg, #7b00d4 0%, #4caf50 100%);
 	color: #fff;
 	padding: 3rem 2rem 2rem 2rem;
@@ -22,12 +27,16 @@
 	padding: 0 5%;
 }
 .doc-section {
-	width: 100%;
+	width: 100vw;
+	max-width: 100vw;
+	min-width: unset;
+	box-sizing: border-box;
 	margin: 2.5rem auto;
 	background: var(--background-surface);
 	border-radius: 16px;
 	box-shadow: 0 6px 24px var(--shadow-subtle);
-	padding: 5%;
+	padding: 2.5rem 2rem;
+	overflow-x: auto;
 }
 .doc-section h2 {
 	color: #7b00d4;
