@@ -21,32 +21,9 @@
 	--shadow-subtle: rgba(0, 0, 0, 0.06); /* Ombre légère */
 	--shadow-hover: rgba(0, 0, 0, 0.12); /* Ombre au survol */
 
-	/* Thème toggle */
-	--toggle-bg: #d1d5db;
-	--toggle-thumb: #6b7280;
-
 	/* Typographie et espacement */
 	--font-family: 'Inter', sans-serif;
 	--spacing-base: 1rem;
-}
-
-/* Mode sombre */
-body.dark-mode {
-	--primary-color: #bb86fc;
-	--primary-hover: #9f62de;
-	--secondary-color: #b0b0b0;
-	--accent-success: #66bb6a;
-	--accent-danger: #ef5350;
-	--background-body: #1a1a1a;
-	--background-surface: #2c2c2c;
-	--background-input-idle: #3a3a3a;
-	--text-main: #e0e0e0;
-	--text-placeholder: #808080;
-	--border-default: #4a4a4a;
-	--shadow-subtle: rgba(0, 0, 0, 0.2);
-	--shadow-hover: rgba(0, 0, 0, 0.3);
-	--toggle-bg: #4a4a4a;
-	--toggle-thumb: #d1d5db;
 }
 
 /* Styles généraux du corps */
@@ -78,59 +55,6 @@ body {
 	align-items: center;
 	margin-top: 2rem; /* Espace du haut */
 	position: relative; /* Pour positionner le toggle */
-}
-
-/* Conteneur du bouton de thème */
-.theme-toggle-container {
-	position: fixed;
-	top: 7vh;
-	left: 10vw;
-	z-index: 1000;
-	pointer-events: auto;
-	display: flex !important;
-	align-items: center;
-	justify-content: center;
-	visibility: visible !important;
-	opacity: 1 !important;
-}
-
-/* Bouton de bascule de thème */
-.theme-toggle-button {
-	background: none;
-	border: none;
-	cursor: pointer;
-	font-size: 2.2rem;
-	color: var(--primary-color);
-	padding: 0;
-	margin: 0;
-	border-radius: 0;
-	box-shadow: none;
-	display: flex !important;
-	align-items: center;
-	justify-content: center;
-	transition: none;
-	outline: none;
-	pointer-events: auto;
-	visibility: visible !important;
-	opacity: 1 !important;
-}
-
-.theme-toggle-button:hover {
-	color: var(--primary-color);
-	background: none;
-	box-shadow: none;
-	transform: none;
-}
-
-body.dark-mode .theme-toggle-button {
-	color: #ffd600;
-}
-
-.theme-toggle-button i {
-	font-size: 1em;
-	margin: 0;
-	padding: 0;
-	line-height: 1;
 }
 
 /* Carte de contenu principale */
@@ -307,12 +231,6 @@ button:active {
 	color: #5a00a0; /* Texte violet foncé */
 }
 
-body.dark-mode .status.loading {
-	background: #4b3a5a; /* Fond violet foncé pour le mode sombre */
-	border-color: #9f62de;
-	color: #bb86fc;
-}
-
 .status.success {
 	background: #e6f3e6; /* Fond vert clair pour le succès */
 	border-color: var(--accent-success);
@@ -342,10 +260,6 @@ body.dark-mode .status.error {
 	.main-wrapper {
 		padding: 1.5rem 1rem;
 		margin-top: 0; /* Pas de marge en haut sur mobile */
-	}
-	.theme-toggle-container {
-		top: 2vh;
-		left: 4vw;
 	}
 	.content-card {
 		border-radius: 0; /* Pas de bordures arrondies sur mobile pour prendre toute la largeur */
@@ -398,10 +312,6 @@ body.dark-mode .status.error {
 		padding-left: 4rem;
 		padding-right: 4rem;
 	}
-	.theme-toggle-container {
-		top: 2rem;
-		right: 4rem;
-	}
 	.content-card {
 		padding: 3.5rem;
 		margin-top: 0;
@@ -420,9 +330,6 @@ body.dark-mode .status.error {
 	.main-wrapper {
 		padding-left: 8rem;
 		padding-right: 8rem;
-	}
-	.theme-toggle-container {
-		right: 8rem;
 	}
 }
 

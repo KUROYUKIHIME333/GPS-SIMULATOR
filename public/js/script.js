@@ -3,64 +3,12 @@ const statusDiv = document.getElementById('status');
 const submitButton = document.getElementById('submitButton');
 const buttonText = document.getElementById('buttonText');
 const loadingSpinner = document.getElementById('loadingSpinner');
-const themeToggleButton = document.getElementById('themeToggleButton');
-const themeIcon = document.getElementById('themeIcon');
-const body = document.body;
 
-/**
- * Applique le thème spécifié (dark ou light) au corps du document.
- * Met à jour l'icône du bouton de thème et l'attribut aria-label.
- * @param {string} theme - Le thème à appliquer ('dark' ou 'light').
- */
-function applyTheme(theme) {
-	if (theme === 'dark') {
-		body.classList.add('dark-mode');
-		themeIcon.classList.remove('fa-moon');
-		themeIcon.classList.add('fa-sun');
-		themeToggleButton.setAttribute('aria-label', 'Basculer vers le mode clair');
-	} else {
-		body.classList.remove('dark-mode');
-		themeIcon.classList.remove('fa-sun');
-		themeIcon.classList.add('fa-moon');
-		themeToggleButton.setAttribute('aria-label', 'Basculer vers le mode sombre');
-	}
-	// Toujours rendre l'icône visible
-	themeIcon.style.display = 'inline';
-}
+// Initialiser le statut d'information au chargement du DOM
 
-// Appliquer le thème au chargement du DOM
 document.addEventListener('DOMContentLoaded', () => {
-	const savedTheme = localStorage.getItem('theme');
-	if (savedTheme) {
-		applyTheme(savedTheme);
-	} else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-		applyTheme('dark');
-	} else {
-		applyTheme('light');
-	}
-	// Initialiser le statut d'information
 	statusDiv.className = 'status initial';
 	statusDiv.innerHTML = '<i class="fas fa-info-circle"></i> <span>Entrez les détails de la simulation et cliquez sur "Lancer la simulation".</span>';
-
-	// Correction accessibilité : le bouton doit toujours être focusable
-	themeToggleButton.tabIndex = 0;
-});
-
-// Écouteur d'événement pour le bouton de bascule de thème
-themeToggleButton.addEventListener('click', () => {
-	const currentTheme = body.classList.contains('dark-mode') ? 'dark' : 'light';
-	const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-	applyTheme(newTheme);
-	localStorage.setItem('theme', newTheme); // Sauvegarde la préférence de l'utilisateur
-});
-
-// Accessibilité : activer le bouton avec Entrée ou Espace
-// (important pour un bouton simple icône)
-themeToggleButton.addEventListener('keydown', (e) => {
-	if (e.key === 'Enter' || e.key === ' ') {
-		e.preventDefault();
-		themeToggleButton.click();
-	}
 });
 
 // Écouteur d'événement pour la soumission du formulaire
