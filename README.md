@@ -106,8 +106,6 @@ Ce projet a été développé par **RAMAZANI SUMAILI Daniel**.
 - [Site web](https://daniel-ramazani.onrender.com/)
 - [LinkedIn](https://www.linkedin.com/in/daniel-hermann-ramazani-521786232/)
 - [GitHub](https://github.com/KUROYUKIHIME333)
-- [CV](https://daniel-ramazani.onrender.com/curiculum.html)
-- [Projets](https://daniel-ramazani.onrender.com/project.html)
 
 ---
 
