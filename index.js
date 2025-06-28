@@ -1,12 +1,22 @@
 const express = require("express");
+const cors = require("cors");
 const bodyParser = require("body-parser");
 const polyline = require("@mapbox/polyline"); // For decoding Google Maps polylines
 const axios = require("axios"); // For making HTTP POST requests
 const haversine = require("haversine-distance"); // For calculating distance between two points
 const path = require("path"); // For handling file paths
 
+
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// Autoriser les requêtes de toutes origines (CORS)
+app.use(cors({
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+}));
+
 
 // Middleware to parse JSON request bodies
 app.use(bodyParser.json());
