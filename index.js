@@ -6,24 +6,24 @@ const axios = require("axios"); // For making HTTP POST requests
 const haversine = require("haversine-distance"); // For calculating distance between two points
 const path = require("path"); // For handling file paths
 
-
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Autoriser les requêtes de toutes origines (CORS)
-app.use(cors({
-  origin: '*',
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-}));
-
+app.use(
+  cors({
+    origin: "*",
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
 
 // Middleware to parse JSON request bodies
 app.use(bodyParser.json());
 
 // Servir la landing page de documentation sur '/'
-app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/public/home.html');
+app.get("/", (req, res) => {
+  res.sendFile(__dirname + "/public/home.html");
 });
 
 // Servir les fichiers statiques pour l'UI
@@ -117,18 +117,29 @@ async function simulateVehicleMovement(
       const point1 = pathPoints[currentPointIndex];
       const point2 = pathPoints[currentPointIndex + 1];
       const segmentDistanceM = haversine(point1, point2);
-      const distancePerIntervalM = (currentSpeedKmh * 1000 / 3600) * intervalSeconds;
-      const fractionPerInterval = segmentDistanceM > 0 ? distancePerIntervalM / segmentDistanceM : 1.0;
+      const distancePerIntervalM =
+        ((currentSpeedKmh * 1000) / 3600) * intervalSeconds;
+      const fractionPerInterval =
+        segmentDistanceM > 0 ? distancePerIntervalM / segmentDistanceM : 1.0;
 
       // Gestion des arrêts
-      if (!stopped && currentSegmentFraction === 0.0 && stopProbability > 0 && Math.random() < stopProbability) {
+      if (
+        !stopped &&
+        currentSegmentFraction === 0.0 &&
+        stopProbability > 0 &&
+        Math.random() < stopProbability
+      ) {
         // On va s'arrêter, calculer la distance de freinage
         braking = true;
         brakingDistanceM = brakingDistance(simulationSpeedKmh);
         brakingStartIdx = currentPointIndex;
         brakingProgress = 0;
         approachingStop = true;
-        console.log(`Préparation à l'arrêt : freinage sur ${brakingDistanceM.toFixed(1)}m.`);
+        console.log(
+          `Préparation à l'arrêt : freinage sur ${brakingDistanceM.toFixed(
+            1
+          )}m.`
+        );
       }
 
       // Si on est en phase de freinage
@@ -138,11 +149,17 @@ async function simulateVehicleMovement(
         if (remainingDist <= brakingDistanceM) {
           // Décélération linéaire
           const minSpeed = 2; // km/h, vitesse minimale avant arrêt
-          currentSpeedKmh = Math.max(minSpeed, currentSpeedKmh - (simulationSpeedKmh / (brakingDistanceM / distancePerIntervalM)));
+          currentSpeedKmh = Math.max(
+            minSpeed,
+            currentSpeedKmh -
+              simulationSpeedKmh / (brakingDistanceM / distancePerIntervalM)
+          );
           if (currentSpeedKmh <= minSpeed + 0.1) {
             braking = false;
             stopped = true;
-            stopIntervalsLeft = Math.ceil(stopDurationSeconds / intervalSeconds);
+            stopIntervalsLeft = Math.ceil(
+              stopDurationSeconds / intervalSeconds
+            );
             currentSpeedKmh = simulationSpeedKmh; // On remet la vitesse pour la suite
             console.log("Arrêt complet atteint, arrêt simulé.");
           }
@@ -172,7 +189,11 @@ async function simulateVehicleMovement(
           currentSegmentFraction = 0.0;
           currentLocation = point2;
         } else {
-          currentLocation = interpolatePoint(point1, point2, currentSegmentFraction);
+          currentLocation = interpolatePoint(
+            point1,
+            point2,
+            currentSegmentFraction
+          );
         }
       }
 
@@ -188,9 +209,13 @@ async function simulateVehicleMovement(
         // Envoi des données GPS simulées à l'URL de rappel
         try {
           await axios.post(callbackUrl, gpsData);
-          console.log(`Données envoyées à ${callbackUrl}: ${JSON.stringify(gpsData)}`);
+          console.log(
+            `Données envoyées à ${callbackUrl}: ${JSON.stringify(gpsData)}`
+          );
         } catch (error) {
-          console.error(`Erreur lors de l'envoi des données à ${callbackUrl}: ${error.message}`);
+          console.error(
+            `Erreur lors de l'envoi des données à ${callbackUrl}: ${error.message}`
+          );
         }
       }
     }, intervalSeconds * 1000);
@@ -210,7 +235,7 @@ app.post("/simulate_route", (req, res) => {
     start_lat = null,
     start_lng = null,
     reference = null,
-    interval_seconds = 5
+    interval_seconds = 5,
   } = req.body;
 
   if (!encoded_polyline) {
