@@ -1,134 +1,150 @@
 <!DOCTYPE html>
 <html lang="fr">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GPS Simulator API - Documentation</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/home.css">
-    <meta name="description"
-        content="Documentation de l'API GPS Simulator : simulez des trajets GPS, testez vos applications de géolocalisation, et découvrez comment utiliser l'API et l'interface web.">
-</head>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>GPS Simulator API - Documentation</title>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap"
+            rel="stylesheet">
+        <link rel="stylesheet" href="css/style.css">
+        <link rel="stylesheet" href="css/home.css">
+        <meta name="description"
+            content="Documentation de l'API GPS Simulator : simulez des trajets GPS, testez vos applications de géolocalisation, et découvrez comment utiliser l'API et l'interface web.">
+    </head>
 
-<body>
-    <div class="landing-hero">
-        <h1>GPS Simulator API</h1>
-        <p>Simulez des trajets GPS, testez vos applications de géolocalisation, et intégrez facilement l'API à vos
-            outils.<br>
-            <span style="font-size:1.1rem;">API REST & Interface Web moderne</span>
-        </p>
-        <a href="index.html"
-            style="background:#fff;color:#7b00d4;font-weight:600;padding:0.7em 2em;border-radius:8px;text-decoration:none;font-size:1.1rem;box-shadow:0 2px 8px #0002;">Démarrer
-            la simulation</a>
-    </div>
-    <div class="doc-section">
-        <h2>Utilisation de l'API <span class="badge">REST</span></h2>
-        <p>Envoyez une requête <code>POST</code> à <code>/simulate_route</code> pour démarrer une simulation GPS.</p>
-        <h3>Exemple de requête</h3>
-        <pre><code>POST /simulate_route
+    <body>
+        <div class="landing-hero">
+            <h1>GPS Simulator API</h1>
+            <p>Simulez des trajets GPS, testez vos applications de
+                géolocalisation, et intégrez facilement l'API à vos
+                outils.<br>
+                <span style="font-size:1.1rem;">API REST & Interface Web
+                    moderne</span>
+            </p>
+            <a href="index.html"
+                style="background:#fff;color:#7b00d4;font-weight:600;padding:0.7em 2em;border-radius:8px;text-decoration:none;font-size:1.1rem;box-shadow:0 2px 8px #0002;">Démarrer
+                la simulation</a>
+        </div>
+        <div class="doc-section">
+            <h2>Utilisation de l'API <span class="badge">REST</span></h2>
+            <p>Envoyez une requête <code>POST</code> à
+                <code>/simulate_route</code> pour démarrer une simulation
+                GPS.</p>
+            <h3>Exemple de requête</h3>
+            <pre><code>POST /simulate_route
 Content-Type: application/json
 
 {
-  "encoded_polyline": "_p~iF~ps|U_ulLnnqC_mqNvxq`@",
-  "callback_url": "https://votre-api.com/gps",
-  "simulation_speed_kmh": 50,
-  "stop_probability": 0.2,
-  "stop_duration_seconds": 60,
-  "reference": "vehicule-42"
+	"callback_url": "https://votre-api.com/gps",
+	"encoded_polyline": "_p~iF~ps|U_ulLnnqC_mqNvxq`@",
+	"reference": "vehicule-42",
+	"simulation_speed_kmh": 50,
+	"stop_duration_seconds": 60,
+	"stop_probability": 0.2
 }
 </code></pre>
-        <h3>Champs acceptés</h3>
-        <table>
-            <tr>
-                <th>Champ</th>
-                <th>Type</th>
-                <th>Obligatoire</th>
-                <th>Description</th>
-            </tr>
-            <tr>
-                <td>encoded_polyline</td>
-                <td>string</td>
-                <td>Oui</td>
-                <td>Polyline encodé du trajet (format Google Maps)</td>
-            </tr>
-            <tr>
-                <td>callback_url</td>
-                <td>string</td>
-                <td>Oui</td>
-                <td>URL à laquelle les positions GPS seront envoyées (POST JSON)</td>
-            </tr>
-            <tr>
-                <td>simulation_speed_kmh</td>
-                <td>number</td>
-                <td>Non</td>
-                <td>Vitesse moyenne en km/h (défaut: 40)</td>
-            </tr>
-            <tr>
-                <td>stop_probability</td>
-                <td>number</td>
-                <td>Non</td>
-                <td>Probabilité d'arrêt à chaque segment (0-1, défaut: 0.1)</td>
-            </tr>
-            <tr>
-                <td>stop_duration_seconds</td>
-                <td>number</td>
-                <td>Non</td>
-                <td>Durée d'arrêt en secondes (défaut: 30)</td>
-            </tr>
-            <tr>
-                <td>start_lat</td>
-                <td>number</td>
-                <td>Non</td>
-                <td>Latitude de départ (sinon premier point du polyline)</td>
-            </tr>
-            <tr>
-                <td>start_lng</td>
-                <td>number</td>
-                <td>Non</td>
-                <td>Longitude de départ (sinon premier point du polyline)</td>
-            </tr>
-            <tr>
-                <td>reference</td>
-                <td>string</td>
-                <td>Non</td>
-                <td>Code ou identifiant à renvoyer dans chaque callback</td>
-            </tr>
-        </table>
-        <h3>Réponse</h3>
-        <pre><code>{
+            <h3>Champs acceptés</h3>
+            <table>
+                <tr>
+                    <th>Champ</th>
+                    <th>Type</th>
+                    <th>Obligatoire</th>
+                    <th>Description</th>
+                </tr>
+                <tr>
+                    <td>encoded_polyline</td>
+                    <td>string</td>
+                    <td>Oui</td>
+                    <td>Polyline encodé du trajet (format Google Maps)</td>
+                </tr>
+                <tr>
+                    <td>callback_url</td>
+                    <td>string</td>
+                    <td>Oui</td>
+                    <td>URL à laquelle les positions GPS seront envoyées (POST
+                        JSON)</td>
+                </tr>
+                <tr>
+                    <td>simulation_speed_kmh</td>
+                    <td>number</td>
+                    <td>Non</td>
+                    <td>Vitesse moyenne en km/h (défaut: 40)</td>
+                </tr>
+                <tr>
+                    <td>stop_probability</td>
+                    <td>number</td>
+                    <td>Non</td>
+                    <td>Probabilité d'arrêt à chaque segment (0-1, défaut:
+                        0.1)</td>
+                </tr>
+                <tr>
+                    <td>stop_duration_seconds</td>
+                    <td>number</td>
+                    <td>Non</td>
+                    <td>Durée d'arrêt en secondes (défaut: 30)</td>
+                </tr>
+                <tr>
+                    <td>start_lat</td>
+                    <td>number</td>
+                    <td>Non</td>
+                    <td>Latitude de départ (sinon premier point du
+                        polyline)</td>
+                </tr>
+                <tr>
+                    <td>start_lng</td>
+                    <td>number</td>
+                    <td>Non</td>
+                    <td>Longitude de départ (sinon premier point du
+                        polyline)</td>
+                </tr>
+                <tr>
+                    <td>reference</td>
+                    <td>string</td>
+                    <td>Non</td>
+                    <td>Code ou identifiant à renvoyer dans chaque callback</td>
+                </tr>
+            </table>
+            <h3>Réponse</h3>
+            <pre><code>{
   "message": "Simulation démarrée en arrière-plan."
 }</code></pre>
-        <h3>Exemple de callback reçu</h3>
-        <pre><code>{
+            <h3>Exemple de callback reçu</h3>
+            <pre><code>{
   "latitude": 48.8566,
   "longitude": 2.3522,
   "timestamp": "2025-06-28T12:34:56.789Z",
   "sequence_id": 1,
   "reference": "vehicule-42"
 }</code></pre>
-    </div>
-    <div class="doc-section">
-        <h2>Utilisation de l'interface Web <span class="badge">UI</span></h2>
-        <ul>
-            <li>Accédez à <code>index.html</code> pour utiliser le simulateur via une interface graphique moderne.</li>
-            <li>Remplissez le formulaire avec un polyline, la vitesse, la probabilité et la durée d'arrêt.</li>
-            <li>(Optionnel) Renseignez une URL de callback pour recevoir les positions GPS simulées.</li>
-            <li>Cliquez sur <b>Lancer la simulation</b>.</li>
-            <li>Vous pouvez visualiser le trajet simulé sur la page de progression.</li>
-        </ul>
-    </div>
-    <footer class="main-footer">
-        <div class="footer-content">
-            <span>&copy; 2025 GPS Simulator</span>
-            <span class="footer-sep">|</span>
-            <span>Développé par <a href="https://github.com/KUROYUKIHIME333" target="_blank">Daniel Ramazani</a></span>
-            <span class="footer-sep">|</span>
-            <a href="mailto:danielramazanisumaili@gmail.com">Contact</a>
         </div>
-    </footer>
-    <script src="js/home.js"></script>
-</body>
+        <div class="doc-section">
+            <h2>Utilisation de l'interface Web <span
+                    class="badge">UI</span></h2>
+            <ul>
+                <li>Accédez à <code>index.html</code> pour utiliser le
+                    simulateur via une interface graphique moderne.</li>
+                <li>Remplissez le formulaire avec un polyline, la vitesse, la
+                    probabilité et la durée d'arrêt.</li>
+                <li>(Optionnel) Renseignez une URL de callback pour recevoir les
+                    positions GPS simulées.</li>
+                <li>Cliquez sur <b>Lancer la simulation</b>.</li>
+                <li>Vous pouvez visualiser le trajet simulé sur la page de
+                    progression.</li>
+            </ul>
+        </div>
+        <footer class="main-footer">
+            <div class="footer-content">
+                <span>&copy; 2025 GPS Simulator</span>
+                <span class="footer-sep">|</span>
+                <span>Développé par <a href="https://github.com/KUROYUKIHIME333"
+                        target="_blank">Daniel Ramazani</a></span>
+                <span class="footer-sep">|</span>
+                <a href="mailto:danielramazanisumaili@gmail.com">Contact</a>
+            </div>
+        </footer>
+        <script src="js/home.js"></script>
+    </body>
 
 </html>
