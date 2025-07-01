@@ -1,15 +1,15 @@
 const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
-const polyline = require("@mapbox/polyline"); // For decoding Google Maps polylines
-const axios = require("axios"); // For making HTTP POST requests
+const polyline = require("@mapbox/polyline"); // For decoding polylines
+const axios = require("axios"); // For making HTTP requests
 const haversine = require("haversine-distance"); // For calculating distance between two points
 const path = require("path"); // For handling file paths
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Autoriser les requêtes de toutes origines (CORS)
+// Allow all origins requests (CORS)
 app.use(
   cors({
     origin: "*",
@@ -21,16 +21,13 @@ app.use(
 // Middleware to parse JSON request bodies
 app.use(bodyParser.json());
 
-// Servir la landing page de documentation sur '/'
+// To serve static files (like CSS, JS, images) from the 'public' directory
+app.use(express.static("public"));
+
+// To serve the landing page ('/')
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/public/home.html");
 });
-
-// Servir les fichiers statiques pour l'UI
-app.use(express.static("public"));
-
-// Haversine distance calculation (using a library for simplicity and accuracy)
-// The haversine-distance library expects points as { latitude: lat, longitude: lon }
 
 // Function to interpolate points along a segment
 function interpolatePoint(point1, point2, fraction) {
@@ -40,23 +37,21 @@ function interpolatePoint(point1, point2, fraction) {
   return { latitude: lat, longitude: lon };
 }
 
-// Fonction utilitaire pour générer un délai aléatoire (ralentissement)
+// Function to generate a random delay between min and max seconds
 function randomDelay(min, max) {
   return Math.random() * (max - min) + min;
 }
 
-// Fonction utilitaire pour calculer la distance de freinage (formule physique simplifiée)
+// Function to calculate braking distance
+// Formula: d = v² / (2 * a) + v * t
 function brakingDistance(speedKmh, reactionTime = 1.0, deceleration = 6.0) {
-  // speedKmh: vitesse en km/h
-  // reactionTime: temps de réaction en secondes (1s par défaut)
-  // deceleration: décélération en m/s² (6 m/s² = freinage sec)
   const speedMs = speedKmh / 3.6;
   const reactionDist = speedMs * reactionTime;
   const brakingDist = (speedMs * speedMs) / (2 * deceleration);
-  return reactionDist + brakingDist; // en mètres
+  return reactionDist + brakingDist; // in meters
 }
 
-// Fonction principale de simulation de mouvement du véhicule
+// Function to simulate vehicle movement along the polyline
 async function simulateVehicleMovement(
   encodedPolyline,
   callbackUrl,
@@ -69,12 +64,12 @@ async function simulateVehicleMovement(
   intervalSeconds = 5
 ) {
   try {
-    // Décodage du polyline en liste de points {latitude, longitude}
+    // To decode the polyline into an array of points
     let pathPoints = polyline
       .decode(encodedPolyline)
       .map((p) => ({ latitude: p[0], longitude: p[1] }));
 
-    // Si un point de départ est fourni, on le force en tête de l'itinéraire
+    // If a strart point is given, set it as the first point
     if (
       startLat !== null &&
       startLng !== null &&
@@ -122,14 +117,14 @@ async function simulateVehicleMovement(
       const fractionPerInterval =
         segmentDistanceM > 0 ? distancePerIntervalM / segmentDistanceM : 1.0;
 
-      // Gestion des arrêts
+      // Stop conditions
       if (
         !stopped &&
         currentSegmentFraction === 0.0 &&
         stopProbability > 0 &&
         Math.random() < stopProbability
       ) {
-        // On va s'arrêter, calculer la distance de freinage
+        // When Stopping, to calculate braking distance
         braking = true;
         brakingDistanceM = brakingDistance(simulationSpeedKmh);
         brakingStartIdx = currentPointIndex;
@@ -142,13 +137,13 @@ async function simulateVehicleMovement(
         );
       }
 
-      // Si on est en phase de freinage
+      // If we are braking
       if (braking) {
-        // On réduit la vitesse progressivement jusqu'à l'arrêt
+        // To decrease speed till stop
         const remainingDist = segmentDistanceM * (1 - currentSegmentFraction);
         if (remainingDist <= brakingDistanceM) {
-          // Décélération linéaire
-          const minSpeed = 2; // km/h, vitesse minimale avant arrêt
+          // linearly decrease speed
+          const minSpeed = 2; // minimal speed before stopping (2 km/h)
           currentSpeedKmh = Math.max(
             minSpeed,
             currentSpeedKmh -
@@ -160,7 +155,7 @@ async function simulateVehicleMovement(
             stopIntervalsLeft = Math.ceil(
               stopDurationSeconds / intervalSeconds
             );
-            currentSpeedKmh = simulationSpeedKmh; // On remet la vitesse pour la suite
+            currentSpeedKmh = simulationSpeedKmh; // resetting speed after stoping
             console.log("Arrêt complet atteint, arrêt simulé.");
           }
         }
@@ -178,7 +173,7 @@ async function simulateVehicleMovement(
           console.log("Reprise du mouvement.");
         }
       } else {
-        // Simulation de ralentissement aléatoire (hors freinage)
+        // Random braking simulation
         let slowFactor = 1.0;
         if (!braking && Math.random() < 0.2) {
           slowFactor = randomDelay(0.3, 0.8);
@@ -206,7 +201,7 @@ async function simulateVehicleMovement(
         sequence_id: sequenceId,
       };
       if (callbackUrl) {
-        // Envoi des données GPS simulées à l'URL de rappel
+        // To send the data to the callback URL
         try {
           await axios.post(callbackUrl, gpsData);
           console.log(
@@ -224,7 +219,7 @@ async function simulateVehicleMovement(
   }
 }
 
-// API endpoint to start the GPS simulation
+// Endpoint to start the simulation
 app.post("/simulate_route", (req, res) => {
   const {
     encoded_polyline,
@@ -245,7 +240,7 @@ app.post("/simulate_route", (req, res) => {
     return res.status(400).json({ error: "callback_url est requis." });
   }
 
-  // Lancer la simulation en arrière-plan
+  // To begin simulation in the background
   simulateVehicleMovement(
     encoded_polyline,
     callback_url,
