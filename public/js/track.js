@@ -9,13 +9,13 @@ let transferId = null;
 // Décode un polyline Mapbox/Google en un tableau de points {lat, lng}.
 function decodePolyline(encodedPolyline) {
   // Vérifie si Polyline est défini par Leaflet ou une autre bibliothèque
-  if (typeof Polyline === "undefined") {
+  if (typeof polyline === "undefined") {
     console.error(
       "Polyline library not loaded. Make sure you've included https://unpkg.com/@mapbox/polyline@1.1.1/src/polyline.js"
     );
     return [];
   }
-  const coords = Polyline.decode(encodedPolyline);
+  const coords = polyline.decode(encodedPolyline);
   return coords.map((coord) => ({ lat: coord[0], lng: coord[1] }));
 }
 
