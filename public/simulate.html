@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>GPS Simulator - Simuler des trajets sans casse-têtes</title>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap"
+            rel="stylesheet">
+        <link rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+            integrity="sha512-ExxQn3aT5u/q2Uf72RjP6T9z8L1X4wS6+C0d4uL2O2zP+T2m5Fq2Q5l3P2Q5f5F5e5F5f5F5d5A=="
+            crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link rel="stylesheet" href="css/style.css">
+        <link rel="apple-touch-icon" sizes="180x180"
+            href="assets/icons/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32"
+            href="assets/icons/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16"
+            href="assets/icons/favicon-16x16.png">
+        <link rel="icon" type="image/png" sizes="192x192"
+            href="assets/icons/android-chrome-192x192.png">
+        <link rel="icon" type="image/png" sizes="512x512"
+            href="assets/icons/android-chrome-512x512.png">
+        <link rel="shortcut icon" href="favicon.ico">
+        <link rel="manifest" href="site.webmanifest">
+        <meta name="theme-color" content="#7B00D4">
+        <meta name="description"
+            content="Simulateur GPS pour tests d'intégration, suivi de flotte, et développement d'applications de géolocalisation. Générez des parcours GPS réalistes avec arrêts et vitesse personnalisables.">
+        <meta property="og:title"
+            content="GPS Simulator - Pilotez Vos Données de Localisation">
+        <meta property="og:description"
+            content="Générez et simulez des parcours GPS complexes pour vos tests et développements. Un outil puissant pour valider vos systèmes de géolocalisation et d'intégration en toute fluidité.">
+        <meta property="og:type" content="website">
+        <meta property="og:image" content="android-chrome-512x512.png">
+        <meta property="og:locale" content="fr_FR">
+    </head>
+
+    <body>
+        <div class="main-wrapper">
+            <main class="content-card">
+                <h1>GPS Simulator</h1>
+                <p class="subtitle">Générez et simulez des parcours GPS
+                    complexes pour vos tests et développements. Un outil
+                    puissant pour valider vos systèmes de géolocalisation.</p>
+
+                <div class="form-info"
+                    style="margin-bottom: 1em; padding: 0.7em 1em; background: #f8f8fc; border-radius: 6px; border: 1px solid #e0e0ef; color: #333; font-size: 1em;">
+                    <strong>Champs obligatoires :</strong> `mobileId`,
+                    `polyline`, `vitesseMoyenne`, `probabiliteArret`,
+                    `tempsTotalArret`.<br>
+                    <strong>Champ optionnel :</strong> `reRouteStrategy`.<br>
+                    <span style="font-size:0.95em; color:#7B00D4;">Les champs
+                        obligatoires sont signalés par un astérisque
+                        <span style="color:red;">*</span>.</span>
+                </div>
+
+                <form id="simForm">
+                    <label for="mobileId">
+                        <i class="fas fa-id-card"></i> Identifiant Mobile <span
+                            style="color:red;">*</span> :
+                        <span class="tooltip-icon"
+                            title="Un identifiant unique pour ce mobile simulé. Obligatoire.">?</span>
+                    </label>
+                    <input type="text" id="mobileId" required
+                        placeholder="Ex: vehicule-42" />
+
+                    <label for="polyline">
+                        <i class="fas fa-route"></i> Polyline <span
+                            style="color:red;">*</span> :
+                        <span class="tooltip-icon"
+                            title="Le polyline encodé du trajet à simuler (format Google Maps). Champ obligatoire.">?</span>
+                    </label>
+                    <input type="text" id="polyline" required
+                        placeholder="Ex: _p~iF~ps|U_ulLnnqC_mqNvxq`@" />
+
+                    <label for="vitesseMoyenne">
+                        <i class="fas fa-tachometer-alt"></i> Vitesse Moyenne
+                        (km/h) <span style="color:red;">*</span> :
+                        <span class="tooltip-icon"
+                            title="Vitesse moyenne du mobile en kilomètres par heure. Champ obligatoire.">?</span>
+                    </label>
+                    <input type="number" id="vitesseMoyenne" required min="0"
+                        step="0.1" placeholder="Ex: 60" />
+
+                    <label for="probabiliteArret">
+                        <i class="fas fa-hand-paper"></i> Probabilité d'Arrêt
+                        (0-1) <span style="color:red;">*</span> :
+                        <span class="tooltip-icon"
+                            title="Probabilité qu'un arrêt survienne à chaque étape de la simulation (entre 0 et 1). Champ obligatoire.">?</span>
+                    </label>
+                    <input type="number" id="probabiliteArret" required min="0"
+                        max="1" step="0.01" placeholder="Ex: 0.1" />
+
+                    <label for="tempsTotalArret">
+                        <i class="fas fa-hourglass-half"></i> Temps Total Arrêt
+                        (s) <span style="color:red;">*</span> :
+                        <span class="tooltip-icon"
+                            title="Durée totale des arrêts en secondes sur l'ensemble du trajet. Champ obligatoire.">?</span>
+                    </label>
+                    <input type="number" id="tempsTotalArret" required min="0"
+                        step="1" placeholder="Ex: 3600" />
+
+                    <label for="reRouteStrategy">
+                        <i class="fas fa-random"></i> Stratégie de Reroutage :
+                        <span class="tooltip-icon"
+                            title="Moment où un reroutage aléatoire peut être déclenché ('start', 'middle', 'end', 'random'). Optionnel, par défaut 'random'.">?</span>
+                    </label>
+                    <select id="reRouteStrategy">
+                        <option value="random">Aléatoire (par défaut)</option>
+                        <option value="start">Début de trajet</option>
+                        <option value="middle">Milieu de trajet</option>
+                        <option value="end">Fin de trajet</option>
+                    </select>
+
+                    <button type="submit" id="submitButton">
+                        <span id="buttonText">Lancer la simulation</span>
+                        <i id="loadingSpinner" class="fas fa-spinner fa-spin"
+                            style="display: none;"></i>
+                    </button>
+                </form>
+
+                <div id="status" class="status initial">
+                    <i class="fas fa-info-circle"></i> <span>Entrez les détails
+                        de la simulation et cliquez sur "Lancer la
+                        simulation".</span>
+                </div>
+            </main>
+        </div>
+
+        <script src="js/simulate.js"></script>
+    </body>
+
+</html>

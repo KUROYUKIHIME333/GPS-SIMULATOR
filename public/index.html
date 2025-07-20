@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>GPS Simulator API</title>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap"
+            rel="stylesheet">
+        <link rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+            integrity="sha512-ExxQn3aT5u/q2Uf72RjP6T9z8L1X4wS6+C0d4uL2O2zP+T2m5Fq2Q5l3P2Q5f5F5e5F5f5F5d5A=="
+            crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link rel="stylesheet" href="css/style.css">
+        <link rel="stylesheet" href="css/home.css">
+        <link rel="apple-touch-icon" sizes="180x180"
+            href="assets/icons/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32"
+            href="assets/icons/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16"
+            href="assets/icons/favicon-16x16.png">
+        <link rel="icon" type="image/png" sizes="192x192"
+            href="assets/icons/android-chrome-192x192.png">
+        <link rel="icon" type="image/png" sizes="512x512"
+            href="assets/icons/android-chrome-512x512.png">
+        <link rel="shortcut icon" href="favicon.ico">
+        <link rel="manifest" href="site.webmanifest">
+        <meta name="theme-color" content="#7B00D4">
+        <meta name="description"
+            content="Simulateur GPS pour tests d'intégration, suivi de flotte, et développement d'applications de géolocalisation. Générez des parcours GPS réalistes avec arrêts et vitesse personnalisables.">
+        <meta property="og:title"
+            content="GPS Simulator - Pilotez Vos Données de Localisation">
+        <meta property="og:description"
+            content="Générez et simulez des parcours GPS complexes pour vos tests et développements. Un outil puissant pour valider vos systèmes de géolocalisation et d'intégration en toute fluidité.">
+        <meta property="og:type" content="website">
+        <meta property="og:image" content="android-chrome-512x512.png">
+        <meta property="og:locale" content="fr_FR">
+    </head>
+
+    <body>
+        <div class="landing-hero">
+            <h1>GPS Simulator API</h1>
+            <p>Simulez des trajets GPS, testez vos applications de
+                géolocalisation, et intégrez facilement l'API à vos
+                outils.<br>
+                <span style="font-size:1.1rem;">API REST & Interface Web
+                    moderne</span>
+            </p>
+            <a href="simulate.html"
+                style="background:#fff;color:#7b00d4;font-weight:600;padding:0.7em 2em;border-radius:8px;text-decoration:none;font-size:1.1rem;box-shadow:0 2px 8px #0002;">Démarrer
+                la simulation</a>
+        </div>
+        <div class="doc-section">
+            <h2>Utilisation de l'API <span class="badge">REST</span></h2>
+            <p>Envoyez une requête <code>POST</code> à
+                <code>/transferts</code>
+                pour démarrer une simulation GPS.</p>
+            <h3>Exemple de requête</h3>
+            <pre><code>POST /transferts
+Content-Type: application/json
+
+{
+    "mobileId": "vehicule-42",
+	"polyline": "_p~iF~ps|U_ulLnnqC_mqNvxq`@",
+	"vitesseMoyenne": 50,
+	"probabiliteArret": 0.2,
+	"tempsTotalArret": 3600,
+    "reRouteStrategy": "random"
+}
+
+</code></pre>
+            <h3>Champs acceptés</h3>
+            <table>
+                <tr>
+                    <th>Champ</th>
+                    <th>Type</th>
+                    <th>Obligatoire</th>
+                    <th>Description</th>
+                </tr>
+                <tr>
+                    <td>mobileId</td>
+                    <td>string</td>
+                    <td>Oui</td>
+                    <td>Identifiant unique pour le mobile simulé.</td>
+                </tr>
+                <tr>
+                    <td>polyline</td>
+                    <td>string ou array de {lat, lng}</td>
+                    <td>Oui</td>
+                    <td>Polyline encodé du trajet (format Google Maps) ou un
+                        tableau de points.</td>
+                </tr>
+                <tr>
+                    <td>vitesseMoyenne</td>
+                    <td>number</td>
+                    <td>Oui</td>
+                    <td>Vitesse moyenne en km/h.</td>
+                </tr>
+                <tr>
+                    <td>probabiliteArret</td>
+                    <td>number</td>
+                    <td>Oui</td>
+                    <td>Probabilité qu'un arrêt survienne (0-1).</td>
+                </tr>
+                <tr>
+                    <td>tempsTotalArret</td>
+                    <td>number</td>
+                    <td>Oui</td>
+                    <td>Durée totale des arrêts en secondes sur l'ensemble du
+                        trajet.</td>
+                </tr>
+                <tr>
+                    <td>reRouteStrategy</td>
+                    <td>string</td>
+                    <td>Non (défaut: 'random')</td>
+                    <td>Stratégie de reroutage ('start', 'middle', 'end',
+                        'random').</td>
+                </tr>
+            </table>
+            <h3>Réponse (démarrage)</h3>
+            <pre><code>{
+  "id": "a1b2c3d4-e5f6-7890-1234-567890abcdef",
+  "dureeInitiale": 3600,
+  "mobileId": "vehicule-42"
+}</code></pre>
+
+            <h3>Endpoints de Suivi et Annulation</h3>
+            <p>Pour suivre le statut d'un transfert : <code>GET
+                    /transferts/:id</code></p>
+            <p>Pour annuler un transfert : <code>DELETE
+                    /transferts/:id</code></p>
+
+            <h3>Exemple de réponse GET /transferts/:id</h3>
+            <pre><code>{
+  "id": "a1b2c3d4-e5f6-7890-1234-567890abcdef",
+  "mobileId": "vehicule-42",
+  "currentPosition": { "lat": -4.000038, "lng": 15.000013 },
+  "currentSpeed": 50,
+  "elapsedTime": 300,
+  "estimatedRemainingTime": 3300,
+  "initialDuration": 3600,
+  "isStopped": false,
+  "stopDurationLeft": 0,
+  "reRouteStrategy": "random",
+  "hasReRouted": true
+}</code></pre>
+        </div>
+        <div class="doc-section">
+            <h2>Utilisation de l'interface Web <span
+                    class="badge">UI</span></h2>
+            <ul>
+                <li>Accédez à l'interface en cliquant sur <code>DÉMARRER LA
+                        SIMULATION</code></li>
+                <li>Remplissez le formulaire avec un polyline, la vitesse, la
+                    probabilité d'arrêts et leur durée totale.</li>
+                <li>Choisissez une stratégie de reroutage si désiré.</li>
+                <li>Cliquez sur <b>Lancer la simulation</b>.</li>
+                <li>Vous serez redirigé vers la page de suivi où vous pourrez
+                    visualiser le trajet en direct.</li>
+            </ul>
+        </div>
+        <footer class="main-footer">
+            <div class="footer-content">
+                <span>&copy; 2025 GPS Simulator</span>
+                <span class="footer-sep">|</span>
+                <span>Développé par <a href="https://github.com/KUROYUKIHIME333"
+                        target="_blank">Daniel Ramazani</a></span>
+                <span class="footer-sep">|</span>
+                <a href="mailto:danielramazanisumaili@gmail.com">Contact</a>
+            </div>
+        </footer>
+        <script src="js/home.js"></script>
+    </body>
+
+</html>
