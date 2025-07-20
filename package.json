@@ -1,10 +1,12 @@
 {
   "name": "gps-simulator",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "API REST pour simuler le déplacement d'un mobile sur un itinéraire (TypeScript)",
+  "main": "dist/server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "npx tsc",
+    "start": "node dist/server.js",
+    "dev": "npm run build && npm run start"
   },
   "repository": {
     "type": "git",
