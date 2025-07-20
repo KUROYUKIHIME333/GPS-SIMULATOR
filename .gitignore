@@ -3,3 +3,6 @@ node_modules
 
 #ENVIRONNEMENT VARIABLES
 .env
+
+#BUILD FOLDER
+dist
