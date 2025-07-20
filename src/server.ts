@@ -3,10 +3,12 @@ import express, { Request, Response, NextFunction } from 'express';
 import config from './config/config';
 import transfertRoutes from './routes/transfertRoutes';
 import path from 'path'; // Ajoute cette ligne pour gérer les chemins de fichiers
+import dotenv from 'dotenv';
+
 
 const app = express();
 const PORT = config.port;
-
+dotenv.config();
 app.use(express.json());
 
 // Servir les fichiers statiques depuis le dossier 'public'
