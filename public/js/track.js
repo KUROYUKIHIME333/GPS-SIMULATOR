@@ -5,10 +5,9 @@ let traveledPolylineLayer;
 let simulationInterval = null;
 let currentTraveledPath = [];
 let transferId = null;
+let blinkInterval = null; // Ajout pour le clignotement
 
-// Décode un polyline Mapbox/Google en un tableau de points {lat, lng}.
 function decodePolyline(encodedPolyline) {
-  // Vérifie si Polyline est défini par Leaflet ou une autre bibliothèque
   if (typeof polyline === "undefined") {
     console.error(
       "Polyline library not loaded. Make sure you've included https://unpkg.com/@mapbox/polyline@1.1.1/src/polyline.js"
@@ -19,10 +18,9 @@ function decodePolyline(encodedPolyline) {
   return coords.map((coord) => ({ lat: coord[0], lng: coord[1] }));
 }
 
-// Initialise la carte Leaflet
 function initializeMap(initialPosition) {
   if (map) {
-    map.remove(); // Supprime l'ancienne carte si elle existe
+    map.remove();
   }
   map = L.map("map").setView(initialPosition, 13);
 
@@ -31,7 +29,6 @@ function initializeMap(initialPosition) {
       '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
   }).addTo(map);
 
-  // Initialise les couches de polylines
   initialPolylineLayer = L.polyline([], {
     color: "red",
     weight: 4,
@@ -43,20 +40,36 @@ function initializeMap(initialPosition) {
     opacity: 0.9,
   }).addTo(map);
 
-  // Marqueur du mobile
-  mobileMarker = L.marker(initialPosition, {
-    icon: L.icon({
-      iconUrl: "https://cdn-icons-png.flaticon.com/512/1042/1042582.png", // Icône de voiture/camion
-      iconSize: [38, 38],
-      iconAnchor: [19, 38],
-      popupAnchor: [0, -38],
-    }),
+  // Marqueur du mobile : cercle bleu ciel clignotant en violet
+  mobileMarker = L.circleMarker(initialPosition, {
+    radius: 10,
+    fillColor: "#87CEEB", // Bleu ciel
+    color: "#87CEEB", // Bordure bleu ciel
+    weight: 2,
+    opacity: 1,
+    fillOpacity: 0.8,
   }).addTo(map);
 
   mobileMarker.bindPopup("Début de la simulation").openPopup();
+
+  // Fonction de clignotement
+  let isViolet = false;
+  blinkInterval = setInterval(() => {
+    if (isViolet) {
+      mobileMarker.setStyle({
+        fillColor: "#006effff",
+        color: "#006effff",
+      });
+    } else {
+      mobileMarker.setStyle({
+        fillColor: "#e800e8ff", // Violet
+        color: "#e800e8ff", // Bordure violette
+      });
+    }
+    isViolet = !isViolet;
+  }, 500); // Clignote toutes les 500ms
 }
 
-// Met à jour l'affichage sur la carte et les infos
 async function updateSimulationStatus() {
   if (!transferId) return;
 
@@ -68,7 +81,7 @@ async function updateSimulationStatus() {
         stopSimulation();
         document.querySelector("#statusDisplay").textContent =
           "Terminée ou Introuvable";
-        document.querySelector("#cancelSimulation").style.display = "none"; // Cache le bouton annuler
+        document.querySelector("#cancelSimulation").style.display = "none";
         return;
       }
       throw new Error(`Erreur API: ${response.statusText}`);
@@ -77,17 +90,14 @@ async function updateSimulationStatus() {
     const status = await response.json();
     const currentPosition = status.currentPosition;
 
-    // Mise à jour de la carte
     mobileMarker.setLatLng([currentPosition.lat, currentPosition.lng]);
     currentTraveledPath.push(
       L.latLng(currentPosition.lat, currentPosition.lng)
     );
     traveledPolylineLayer.setLatLngs(currentTraveledPath);
 
-    // Ajuster le centre de la carte pour suivre le mobile
     map.setView([currentPosition.lat, currentPosition.lng]);
 
-    // Mise à jour des informations textuelles
     document.querySelector("#mobileIdDisplay").textContent =
       status.mobileId || "N/A";
     document.querySelector("#simulationIdDisplay").textContent = status.id;
@@ -105,12 +115,11 @@ async function updateSimulationStatus() {
     document.querySelector("#hasReRoutedDisplay").textContent =
       status.hasReRouted ? "Oui" : "Non";
 
-    // Si le mobile est arrivé à destination
     if (status.estimatedRemainingTime <= 0 && !status.isStopped) {
       stopSimulation();
       document.querySelector("#statusDisplay").textContent = "Terminée";
       mobileMarker.bindPopup("Arrivé à destination !").openPopup();
-      document.querySelector("#cancelSimulation").style.display = "none"; // Cache le bouton annuler
+      document.querySelector("#cancelSimulation").style.display = "none";
     }
   } catch (error) {
     console.error(
@@ -124,16 +133,25 @@ async function updateSimulationStatus() {
   }
 }
 
-// Fonction pour arrêter la simulation côté client
 function stopSimulation() {
   if (simulationInterval) {
     clearInterval(simulationInterval);
     simulationInterval = null;
-    console.log("Intervalle de mise à jour arrêté.");
+  }
+  if (blinkInterval) {
+    // Arrête le clignotement
+    clearInterval(blinkInterval);
+    blinkInterval = null;
+    // Remet le marqueur à sa couleur initiale si la simulation est arrêtée
+    if (mobileMarker) {
+      mobileMarker.setStyle({
+        fillColor: "#001ac2ff",
+        color: "#0000e1ff",
+      });
+    }
   }
 }
 
-// Annuler la simulation via l'API
 async function cancelSimulationOnServer() {
   if (!confirm("Êtes-vous sûr de vouloir annuler cette simulation ?")) {
     return;
@@ -152,7 +170,7 @@ async function cancelSimulationOnServer() {
     if (response.ok) {
       alert("Simulation annulée avec succès !");
       stopSimulation();
-      window.location.href = "simulate.html"; // Retour au formulaire
+      window.location.href = "simulate.html";
     } else {
       const result = await response.json();
       alert(`Échec de l'annulation: ${result.message || "Erreur inconnue."}`);
@@ -163,9 +181,7 @@ async function cancelSimulationOnServer() {
   }
 }
 
-// Au chargement de la page
 document.addEventListener("DOMContentLoaded", async () => {
-  // Récupère l'ID de transfert de l'URL
   const params = new URLSearchParams(window.location.search);
   transferId = params.get("transferId");
 
@@ -178,12 +194,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   document.querySelector("#simulationIdDisplay").textContent = transferId;
-  document.querySelector("#cancelSimulation").style.display = "inline-block"; // Affiche le bouton annuler
+  document.querySelector("#cancelSimulation").style.display = "inline-block";
   document
     .querySelector("#cancelSimulation")
     .addEventListener("click", cancelSimulationOnServer);
 
-  // Récupère les détails initiaux pour dessiner le polyline complet
   try {
     const initialResponse = await fetch(`/transferts/${transferId}`);
     if (!initialResponse.ok) {
@@ -193,10 +208,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
     const initialStatus = await initialResponse.json();
 
-    // --- Solution temporaire (Idéalement, l'API devrait exposer le polyline initial) ---
-    // Pour un vrai projet, le POST /transferts devrait retourner le polyline initial
-    // ou un GET /transferts/:id/polyline ferait l'affaire.
-    const defaultPolyline = "_p~iF~ps|U_ulLnnqC_mqNvxq`@"; // Exemple de polyline si non disponible
+    const defaultPolyline = "_p~iF~ps|U_ulLnnqC_mqNvxq`@";
     const polylineFromLocalStorage = localStorage.getItem(
       "lastSimulationPolyline"
     );
@@ -204,7 +216,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       polylineFromLocalStorage || defaultPolyline
     );
 
-    // Initialiser la carte avant de dessiner les polylines
     initializeMap(initialStatus.currentPosition);
 
     initialPolylineLayer = L.polyline(initialCoords, {
@@ -212,8 +223,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       weight: 4,
       opacity: 0.7,
     }).addTo(map);
-    map.fitBounds(initialPolylineLayer.getBounds()); // Centre la carte sur le polyline initial
-    // --- Fin solution temporaire ---
+    map.fitBounds(initialPolylineLayer.getBounds());
 
     currentTraveledPath.push(
       L.latLng(
@@ -222,9 +232,8 @@ document.addEventListener("DOMContentLoaded", async () => {
       )
     );
 
-    // Démarrer la mise à jour périodique
-    simulationInterval = setInterval(updateSimulationStatus, 1000); // Mise à jour toutes les secondes
-    updateSimulationStatus(); // Première mise à jour immédiate
+    simulationInterval = setInterval(updateSimulationStatus, 1000);
+    updateSimulationStatus();
   } catch (error) {
     console.error("Erreur lors de l'initialisation du suivi:", error);
     alert(`Erreur d'initialisation: ${error.message}. Redirection.`);

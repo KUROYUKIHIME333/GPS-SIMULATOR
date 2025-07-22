@@ -5,7 +5,7 @@
   "main": "dist/server.js",
   "scripts": {
     "build": "npx tsc",
-    "start": "node dist/server.js",
+    "start": "nodemon dist/server.js",
     "dev": "npm run build && npm run start"
   },
   "repository": {
@@ -25,6 +25,7 @@
     "axios": "^1.10.0",
     "dotenv": "^17.2.0",
     "express": "^5.1.0",
+    "nodemon": "^3.1.10",
     "uuid": "^11.1.0"
   },
   "devDependencies": {

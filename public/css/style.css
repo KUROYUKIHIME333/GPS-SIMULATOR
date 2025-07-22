@@ -19,12 +19,11 @@ body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  background-color: var(--background-color);
+  background-color: white;
   color: var(--text-color);
   line-height: 1.6;
 }
 
-h1,
 h2,
 h3 {
   color: var(--primary-dark);
@@ -42,11 +41,10 @@ h3 {
 
 .content-card {
   background-color: var(--card-background);
-  padding: 40px;
   border-radius: 12px;
   box-shadow: 0 4px 20px var(--shadow-medium);
-  max-width: 600px;
-  width: 100%;
+  max-width: 100vw;
+  padding: 5%;
   text-align: center;
   margin-top: 30px; /* Espace du haut */
 }
@@ -186,9 +184,10 @@ button[type="submit"]:disabled {
 }
 
 .footer-content {
-  max-width: 960px;
-  margin: 0 auto;
-  padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .footer-sep {
@@ -204,4 +203,10 @@ button[type="submit"]:disabled {
 
 .main-footer a:hover {
   color: #ffffff;
+}
+
+@media (min-width: 769px) {
+  .footer-content {
+    flex-direction: row;
+  }
 }

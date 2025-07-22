@@ -39,7 +39,7 @@
     </head>
 
     <body>
-        <div class="landing-hero">
+        <header class="landing-hero">
             <h1>GPS Simulator API</h1>
             <p>Simulez des trajets GPS, testez vos applications de
                 géolocalisation, et intégrez facilement l'API à vos
@@ -50,9 +50,9 @@
             <a href="simulate.html"
                 style="background:#fff;color:#7b00d4;font-weight:600;padding:0.7em 2em;border-radius:8px;text-decoration:none;font-size:1.1rem;box-shadow:0 2px 8px #0002;">Démarrer
                 la simulation</a>
-        </div>
-        <div class="doc-section">
-            <h2>Utilisation de l'API <span class="badge">REST</span></h2>
+        </header>
+        <section class="doc-section">
+            <h2>Utilisation de l'API</h2>
             <p>Envoyez une requête <code>POST</code> à
                 <code>/transferts</code>
                 pour démarrer une simulation GPS.</p>
@@ -145,10 +145,9 @@ Content-Type: application/json
   "reRouteStrategy": "random",
   "hasReRouted": true
 }</code></pre>
-        </div>
-        <div class="doc-section">
-            <h2>Utilisation de l'interface Web <span
-                    class="badge">UI</span></h2>
+        </section>
+        <section class="doc-section">
+            <h2>Utilisation de l'interface Web</h2>
             <ul>
                 <li>Accédez à l'interface en cliquant sur <code>DÉMARRER LA
                         SIMULATION</code></li>
@@ -159,7 +158,7 @@ Content-Type: application/json
                 <li>Vous serez redirigé vers la page de suivi où vous pourrez
                     visualiser le trajet en direct.</li>
             </ul>
-        </div>
+        </section>
         <footer class="main-footer">
             <div class="footer-content">
                 <span>&copy; 2025 GPS Simulator</span>
