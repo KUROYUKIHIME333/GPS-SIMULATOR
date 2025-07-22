@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>GPS Simulator - Suivi d'Itinéraire</title>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap"
+            rel="stylesheet">
+        <link rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+            crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link rel="stylesheet" href="css/style.css">
+        <link rel="apple-touch-icon" sizes="180x180"
+            href="assets/icons/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32"
+            href="assets/icons/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16"
+            href="assets/icons/favicon-16x16.png">
+        <link rel="icon" type="image/png" sizes="192x192"
+            href="assets/icons/android-chrome-192x192.png">
+        <link rel="icon" type="image/png" sizes="512x512"
+            href="assets/icons/android-chrome-512x512.png">
+        <link rel="shortcut icon" href="favicon.ico">
+        <link rel="manifest" href="site.webmanifest">
+        <meta name="theme-color" content="#7B00D4">
+        <meta name="description"
+            content="Suivi en temps réel d'un itinéraire simulé et du mobile sur carte. Visualisez l'itinéraire prévu et le trajet suivi.">
+        <link rel="stylesheet" href="css/track.css">
+        <link rel="stylesheet"
+            href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    </head>
+
+    <body>
+        <header class="top-bar">
+            <div class="logo"><i class="fas fa-map-marked-alt"></i> GPS
+                Simulator</div>
+            <div class="right">
+                <button class="nav-btn"
+                    onclick="window.location.href='simulate.html'">
+                    <i class="fas fa-sliders-h"></i> Configurer Nouvelle
+                    Simulation
+                </button>
+                <button id="cancelSimulation" class="nav-btn btn-danger"
+                    style="margin-left: 10px; display: none;">
+                    <i class="fas fa-times-circle"></i> Annuler Simulation
+                </button>
+            </div>
+        </header>
+
+        <section class="simulation-info">
+            <p>ID du mobile: <strong id="mobileIdDisplay">N/A</strong></p>
+            <p>ID de la simulation: <strong
+                    id="simulationIdDisplay">N/A</strong></p>
+            <p>Vitesse: <strong id="currentSpeedDisplay">N/A</strong> km/h</p>
+            <p>Temps écoulé: <strong id="elapsedTimeDisplay">N/A</strong> s</p>
+            <p>Temps restant estimé: <strong
+                    id="remainingTimeDisplay">N/A</strong> s</p>
+            <p>Statut: <strong id="statusDisplay">En cours...</strong></p>
+            <p>Arrêt restant: <strong id="stopDurationLeftDisplay">N/A</strong>
+                s</p>
+            <p>Rerouté: <strong id="hasReRoutedDisplay">Non</strong></p>
+        </section>
+
+        <section id="map"></section>
+
+        <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+        <script
+            src="https://unpkg.com/@mapbox/polyline@1.1.1/src/polyline.js"></script>
+        <script src="js/track.js"></script>
+    </body>
+
+</html>

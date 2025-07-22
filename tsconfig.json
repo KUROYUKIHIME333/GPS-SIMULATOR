@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "target": "es2021",                         /* Spécifie la version ECMAScript cible pour le code compilé. 'es2021' est un bon équilibre. */
+    "module": "commonjs",                      /* Spécifie le système de module pour le code compilé (Node.js utilise 'commonjs'). */
+    "outDir": "./dist",                        /* Dossier où les fichiers JavaScript compilés seront placés. */
+    "rootDir": "./src",                        /* Dossier racine de tes fichiers source TypeScript. */
+    "strict": true,                            /* Active toutes les options strictes de vérification de type (fortement recommandé !). */
+    "esModuleInterop": true,                   /* Permet l'import/export par défaut de modules CommonJS comme s'ils étaient ES Modules. Essentiel pour `import express from 'express'`. */
+    "skipLibCheck": true,                      /* Saute la vérification de type des fichiers de déclaration des librairies (accélère la compilation). */
+    "forceConsistentCasingInFileNames": true,  /* Enforce la cohérence dans les noms de fichiers pour éviter les problèmes de casse entre OS. */
+    "resolveJsonModule": true,                 /* Permet d'importer des fichiers .json comme des modules. */
+    "sourceMap": true                          /* Génère des fichiers .map pour le débogage. */
+  },
+  "include": [
+    "src/**/*.ts"                              /* Spécifie quels fichiers TypeScript doivent être inclus dans la compilation. */
+  ],
+  "exclude": [
+    "node_modules"                             /* Exclut le dossier node_modules de la compilation. */
+  ]
+}

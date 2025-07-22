@@ -1,0 +1,39 @@
+{
+  "name": "gps-simulator",
+  "version": "1.0.0",
+  "description": "API REST pour simuler le déplacement d'un mobile sur un itinéraire (TypeScript)",
+  "main": "dist/server.js",
+  "scripts": {
+    "build": "npx tsc",
+    "start": "nodemon dist/server.js",
+    "dev": "npm run build && npm run start"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KUROYUKIHIME333/GPS-SIMULATOR.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/KUROYUKIHIME333/GPS-SIMULATOR/issues"
+  },
+  "homepage": "https://github.com/KUROYUKIHIME333/GPS-SIMULATOR#readme",
+  "dependencies": {
+    "@mapbox/polyline": "^1.2.1",
+    "axios": "^1.10.0",
+    "dotenv": "^17.2.0",
+    "express": "^5.1.0",
+    "nodemon": "^3.1.10",
+    "uuid": "^11.1.0"
+  },
+  "devDependencies": {
+    "@types/axios": "^0.9.36",
+    "@types/express": "^5.0.3",
+    "@types/mapbox__polyline": "^1.0.5",
+    "@types/node": "^24.0.15",
+    "@types/uuid": "^10.0.0",
+    "typescript": "^5.8.3"
+  }
+}
