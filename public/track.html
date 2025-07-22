@@ -33,7 +33,7 @@
     </head>
 
     <body>
-        <div class="top-bar">
+        <header class="top-bar">
             <div class="logo"><i class="fas fa-map-marked-alt"></i> GPS
                 Simulator</div>
             <div class="right">
@@ -47,9 +47,9 @@
                     <i class="fas fa-times-circle"></i> Annuler Simulation
                 </button>
             </div>
-        </div>
+        </header>
 
-        <div class="simulation-info">
+        <section class="simulation-info">
             <p>ID du mobile: <strong id="mobileIdDisplay">N/A</strong></p>
             <p>ID de la simulation: <strong
                     id="simulationIdDisplay">N/A</strong></p>
@@ -61,9 +61,9 @@
             <p>Arrêt restant: <strong id="stopDurationLeftDisplay">N/A</strong>
                 s</p>
             <p>Rerouté: <strong id="hasReRoutedDisplay">Non</strong></p>
-        </div>
+        </section>
 
-        <div id="map"></div>
+        <section id="map"></section>
 
         <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
         <script
