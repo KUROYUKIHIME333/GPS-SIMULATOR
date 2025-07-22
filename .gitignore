@@ -6,3 +6,6 @@ node_modules
 
 #BUILD FOLDER
 dist
+
+#tests and drafts
+test.json
