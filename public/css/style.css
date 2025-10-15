@@ -1,7 +1,8 @@
 /* public/css/style.css */
 :root {
   --primary-color: #7b00d4; /* Violet vif */
-  --primary-dark: #5a009c;
+  --primary-dark: #4e0185;
+  --primary-light: #9c33ff;
   --accent-color: #00d4aa; /* Vert/cyan pour l'accentuation */
   --text-color: #333;
   --background-color: #f0f2f5; /* Gris clair pour le fond */
