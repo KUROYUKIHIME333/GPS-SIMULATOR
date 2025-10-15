@@ -1,0 +1,140 @@
+
+{
+	"name": "GPS-SIMULATOR",
+	"shortDescription": "API REST en TypeScript pour simuler le déplacement d'un mobile le long d'un itinéraire, avec gestion d'arrêts et reroutage.",
+	"detailedDescription": {
+	"but": "Fournir une API simple et extensible permettant de lancer des simulations de déplacement (\"mobile\") le long d'un itinéraire (polyline encodée ou tableau de points), de suivre l'état du mobile en temps pseudo-réel, d'annuler la simulation et d'autoriser un reroutage dynamique via un service externe (OpenRouteService ou Mapbox).",
+		"casDusage": [
+			"Tester des interfaces de suivi de véhicule sans matériel GPS réel.",
+			"Prototyper des comportements de trafic (arrêts aléatoires, variations de vitesse) pour des démonstrations ou tests UI.",
+			"Fournir un backend léger pour des applications frontales affichant la position d'un mobile sur une carte pendant une simulation."
+		],
+		"langagesEtEnvironnement": {
+			"langage": "TypeScript (Node.js, compilation vers CommonJS)",
+			"fichiersSource": "dossier src/ (server.ts, config, routes, managers, utils)",
+			"build": "npx tsc (script npm 'build')",
+			"exécutionDev": "npm run dev (compile puis nodemon sur dist/server.js)",
+			"OS": "cross-platform (ex. Windows, Linux, macOS)."
+		}
+	},
+	"architecture": {
+		"overview": "Application REST structurée avec une couche de routes (express), logique métier encapsulée dans un manager unique 'TransfertManager', utilitaires pour la géométrie et l'accès aux APIs externes, et pages frontales statiques servies depuis /public.",
+		"composants": {
+			"server": "src/server.ts — initialise Express, sert les fichiers statiques (public/), enregistre les routes '/transferts' et gère les erreurs.",
+			"config": "src/config/config.ts — charge les variables d'environnement (.env) et expose les clés API et le port.",
+			"routes": "src/routes/transfertRoutes.ts — endpoints REST pour créer (POST /transferts), lire (GET /transferts/:id) et annuler (DELETE /transferts/:id) une simulation.",
+			"managers": "src/managers/transfertManager.ts — implémente la logique de simulation, conserve l'état des simulations en mémoire, exécute une boucle de simulation périodique (setInterval), gère arrêts, distance parcourue, interpolations de positions et reroutage via l'API externe.",
+			"utils": "src/utils — helpers pour décode polyline (@mapbox/polyline), calculs géodésiques et interpolation de position, et client HTTP pour appeler OpenRouteService/Mapbox.",
+			"public": "Dossier static qui contient les pages frontales et les fichiers JS/CSS (index.html, simulate.html, track.html, css/, js/)."
+		}
+	},
+	"endpoints": {
+		"POST /transferts": {
+			"description": "Démarre une nouvelle simulation.",
+			"body": {
+				"polyline": "string (polyline encodée) ou Point[] (array d'objets {lat, lng}) — itinéraire à suivre",
+				"vitesseMoyenne": "number — vitesse moyenne en km/h",
+				"probabiliteArret": "number — probabilité (0..1) qu'un arrêt arrive lors des vérifications",
+				"tempsTotalArret": "number — somme totale des durées d'arrêts (en secondes) à répartir aléatoirement",
+				"mobileId": "string — identifiant logique du mobile simulé",
+				"reRouteStrategy": "optional string — 'start'|'middle'|'end'|'random' (stratégie pour fenêtre de reroutage)"
+			},
+			"response": "201 Created avec { id, dureeInitiale, mobileId } ou 400/500 en cas d'erreur."
+		},
+		"GET /transferts/:id": {
+			"description": "Récupère le statut courant d'une simulation par ID.",
+			"response": {
+				"id": "string",
+				"mobileId": "string",
+				"currentPosition": "Point — { lat, lng }",
+				"currentSpeed": "number — km/h",
+				"elapsedTime": "number — secondes écoulées depuis le début",
+				"estimatedRemainingTime": "number — secondes estimées restantes",
+				"initialDuration": "number — durée théorique initiale en secondes",
+				"isStopped": "boolean",
+				"stopDurationLeft": "number — secondes restantes d'arrêt",
+				"reRouteStrategy": "string",
+				"hasReRouted": "boolean"
+			}
+		},
+		"DELETE /transferts/:id": {
+			"description": "Annule et supprime une simulation en cours.",
+			"response": "200 OK { message } ou 404 si non trouvé."
+		}
+	},
+	"modelsDeDonnees": {
+		"Point": "{ lat: number, lng: number } — représentation d'une coordonnée géographique utilisée partout dans le projet.",
+		"Transfert (interne)": "Objet conservé en mémoire: id, mobileId, initialPolyline, currentPolyline, vitesseMoyenne, probabiliteArret, tempsTotalArret, initialDuration, totalRouteDistance, startTime, elapsedTime, currentPosition, currentSpeed, distanceTraveledFromStart, currentStopDuration, isStopped, remainingStopTimes, intervalId, reRouteAttempts, reRouteStrategy, reRouteWindow, hasReRouted.",
+		"TransfertStatus (API)": "Objet exposé via GET /transferts/:id (voir 'endpoints' pour champs exacts)."
+	},
+	"fluxInterneEtAlgorithmes": {
+		"simulationLoop": "Chaque transfert démarre un setInterval (~1000ms) qui met à jour elapsedTime, gère arrêts (isStopped), calcule la distance parcourue en utilisant vitesse moyenne, interpole la position (interpolatePosition) et arrête la simulation quand la distance totale est atteinte.",
+		"calculDuree": "La durée initiale est calculée en sommant les distances segment par segment (getDistance) puis en divisant par la vitesse moyenne (conversion km/h -> m/s).",
+		"arrêtsAléatoires": "Le temps total d'arrêt est réparti aléatoirement en plusieurs arrêts via _distributeStopTimes, et des vérifications périodiques déterminent si un arrêt doit se produire selon probabiliteArret.",
+		"reroutage": "Pendant une fenêtre calculée selon la stratégie (start/middle/end/random), le manager peut demander un nouvel itinéraire à l'API externe (getRouteFromAPI). Si un nouvel itinéraire est obtenu, la currentPolyline, totalRouteDistance et initialDuration sont recalculés pour prendre en compte le reroutage.",
+		"interopPolyline": "Le projet utilise @mapbox/polyline pour décoder des polylines encodées en tableaux de Points."
+	},
+	"configurationEtVariablesDenvironnement": {
+		"fichier": ".env (non fourni dans le repo) — doit contenir:",
+		"variables": {
+			"PORT": "port du serveur (ex. 3000)",
+			"ORS_API_KEY": "clé API OpenRouteService (requise pour le reroutage)",
+			"MAPBOX_API_KEY": "clé Mapbox (optionnelle si Mapbox est préférée)",
+			"NODE_ENV": "mode d'exécution (development|production)"
+		},
+		"remarques": "Le fichier src/config/config.ts émet un avertissement si ORS_API_KEY est manquante. Sans clé valide, la fonctionnalité de reroutage échouera."
+	},
+	"dépendancesPrincipales": {
+		"express": "Serveur HTTP",
+		"@mapbox/polyline": "Décodage des polylines encodées",
+		"axios": "Requêtes HTTP vers OpenRouteService/Mapbox",
+		"dotenv": "Chargement des variables d'environnement",
+		"uuid": "Génération d'identifiants pour les transferts",
+		"nodemon": "(installé en dépendance) redémarrage en développement"
+	},
+	"scriptsNpm": {
+		"build": "npx tsc — compile TypeScript vers ./dist",
+		"start": "nodemon dist/server.js — lance le serveur (utilisé après build)",
+		"dev": "npm run build && npm run start — pipeline simple de développement"
+	},
+	"exemplesUsageRapides": {
+		"démarrerLeServeur": "npm install && npm run dev (puis ouvrir http://localhost:3000 par défaut)",
+		"créerUneSimulation (curl)": "POST /transferts avec un JSON incluant polyline, vitesseMoyenne, probabiliteArret, tempsTotalArret, mobileId. Réponse: { id, dureeInitiale, mobileId }",
+		"consulterEtat": "GET /transferts/:id retourne le status courant (position, speed, elapsedTime, estimatedRemainingTime, etc).",
+		"annulerSimulation": "DELETE /transferts/:id annule la simulation et libère l'intervalle."
+	},
+	"limitationsConnuesEtHypothèses": {
+		"inMemoryState": "Toutes les simulations sont conservées en mémoire processuelle. Redémarrer le serveur supprime toutes les simulations. Pour production, il faut externaliser l'état (Redis, DB).",
+		"scalabilité": "La méthode actuelle crée un setInterval par simulation; pour de nombreuses simulations, il faut repenser la boucle (ex. boucle globale, queue ou scheduler).",
+		"précision": "Interpolation linéaire sur segments ; ne tient pas compte de limites de vitesse locales, routes bidirectionnelles, sens de circulation ou contraintes routières.",
+		"qualitéDesAPIsExternes": "Le reroutage dépend d'OpenRouteService/Mapbox et de la qualité des clés/configuration; des erreurs réseau sont gérées mais réduisent la robustesse.",
+		"résilience": "Pas d'auth (tous les endpoints sont publics), pas de validation approfondie des inputs (mais validations de base présentes)."
+	},
+	"améliorationsSuggerées": {
+		"courtTerme": [
+			"Ajouter un README.md détaillé avec exemples d'usage et payloads d'API.",
+			"Ajouter des tests unitaires pour utils (getDistance, interpolatePosition, decodePolyline) et pour TransfertManager (calculDurée, distribution d'arrêts).",
+			"Ajouter validation schema (ex. ajv ou zod) pour les payloads d'entrée."
+		],
+		"moyenTerme": [
+			"Persistance de l'état des simulations (Redis) pour survivre aux redémarrages.",
+			"Remplacer setInterval par un scheduler centralisé pour supporter des milliers de simulations.",
+			"Ajouter authentification & autorisation pour protéger l'API.",
+			"Exposer WebSocket / SSE pour pousser les mises à jour de position en temps réel au client plutôt que de poller GET /transferts/:id."
+		],
+		"longTerme": [
+			"Ajouter une couche de simulation physique/plus réaliste (accélération, vitesses aléatoires dépendantes du profil de route).",
+			"Intégration avec une UI de visualisation plus riche et tests e2e."
+		]
+	},
+	"fichiersClés": {
+		"src/server.ts": "Point d'entrée — Express + routes + services statiques.",
+		"src/config/config.ts": "Chargement des variables d'environnement.",
+		"src/routes/transfertRoutes.ts": "Endpoints CRUD pour les simulations.",
+		"src/managers/transfertManager.ts": "Logique métier de la simulation.",
+		"src/utils/apiClient.ts": "Client pour OpenRouteService/Mapbox.",
+		"src/utils/geoUtils.ts": "Calculs géodésiques et interpolation.",
+		"src/utils/polylineUtils.ts": "Décodage polyline via @mapbox/polyline.",
+		"public/": "Frontend statique (exemples/visualisation)."
+	}
+}
