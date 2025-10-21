@@ -16,11 +16,11 @@ interface Transfert {
 	initialPolyline: Point[];
 	currentPolyline: Point[];
 	vitesseMoyenne: number; // km/h
-	probabiliteArret: number; // float entre 0 et 1
+	probabiliteArret: number; // entre 0 et 1
 	tempsTotalArret: number; // secondes
 	initialDuration: number; // secondes
 	totalRouteDistance: number; // mètres
-	startTime: number; // Date.now() au démarrage
+	startTime: number; // Date.now()
 	elapsedTime: number; // secondes
 	currentPosition: Point;
 	currentSpeed: number; // km/h
@@ -29,7 +29,7 @@ interface Transfert {
 	isStopped: boolean;
 	remainingStopTimes: number[]; // secondes
 	remainingTimeForNextStopCheck: number; // secondes
-	intervalId: NodeJS.Timeout | null; // Type pour les IDs d'intervalle Node.js
+	intervalId: NodeJS.Timeout | null; // Type pour les id d'intervalle dans Node.js, d'après Alphonse ou John, je ne me rapelle plus qui
 	reRouteAttempts: number;
 	reRouteStrategy: ReRouteStrategy;
 	reRouteWindow: ReRouteWindow;
