@@ -4,7 +4,7 @@ body {
 	background-color: var(--primary-dark);
 }
 .landing-hero {
-	background-image: url('../assets/background-city-gps-sun.png');
+	background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('../assets/background-city-gps-sun.png');
 	background-size: cover;
 	background-position: center 40%; /* Ajuste la position pour une meilleure mise en avant */
 	background-repeat: no-repeat;
